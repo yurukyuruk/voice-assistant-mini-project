@@ -9,8 +9,9 @@ This is a simple offline AI voice assistant developed in Python. It listens to u
 - Speech-to-text using Vosk
 - Local AI-generated responses using Ollama (Mistral model)
 - Text-to-speech with pyttsx3
-- Integrated interaction loop (listen → process → speak)
-- Spoken feedback messages to improve user experience
+- Intent classification and fallback behavior
+- Auditory feedback for system state (e.g. "I'm listening...")
+- Fully integrated interaction loop: Listen → Understand → Respond
 
 ---
 
@@ -19,11 +20,14 @@ This is a simple offline AI voice assistant developed in Python. It listens to u
 ```
 voice_assistant_project/
 │
-├── assistant_main.py       # Main interaction loop
-├── stt_vosk.py             # Voice input and speech-to-text (Vosk)
-├── nlp_response.py         # AI response using Ollama
-├── tts_engine.py           # Text-to-speech output
-└── README.md               # Project documentation
+├── assistant_main.py        # Full integration loop
+├── stt_vosk.py              # Speech-to-text with Vosk
+├── nlp_response.py          # LLM chat using Ollama
+├── tts_engine.py            # Text-to-speech engine
+├── intent_classifier.py     # Intent recognition logic
+├── assess_quality.py        # Semantic similarity scoring
+├── test_prompts.py          # System prompt A/B test script
+└── README.md                # Documentation
 ```
 
 *Note: Large model files (e.g., Vosk model) are not included in this repository.*
@@ -35,10 +39,13 @@ voice_assistant_project/
 ### Requirements
 
 - Python 3.10 or higher
+- Vosk Model (e.g., vosk-model-small-en-us-0.15)
+- Ollama with Mistral or compatible model
 - Install required libraries using pip:
 
 ```
-pip install vosk pyttsx3 sounddevice ollama
+pip install vosk pyttsx3 sounddevice ollama sentence-transformers
+
 ```
 
 ---
@@ -66,6 +73,19 @@ python assistant_main.py
 ```
 
 The assistant will begin listening for voice input. Speak a command or question and receive a spoken response. Say "exit", "quit", or "stop" to end the session.
+
+---
+
+## System Architecture
+User Speech → Audio Capture → Speech to Text → Intent Detection → Response Generation (Ollama) → Text-to-Speech → Spoken Response
+
+Each component runs locally and integrates smoothly to support real-time interaction.
+
+---
+
+## Testing & Evaluation
+
+I used semantic similarity scoring (via SentenceTransformers) to compare responses with golden standard answers, and the Voice Usability Scale (VUS) to rate the user experience. The system scored well in response quality but had difficulty with speech recognition at times, requiring repeated inputs. Prompts like "let’s stretch" and "remind me to drink water" matched expected responses closely, while casual greetings like “hello” had more variation and slightly lower similarity scores.
 
 ---
 
